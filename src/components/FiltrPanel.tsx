@@ -79,9 +79,10 @@ function LanguageInput(props: {
         label="Język programowania"
         onChange={handleChange}
       >
-        <MenuItem value={"go/go"}>Go</MenuItem>
-        <MenuItem value={"java/java"}>Java</MenuItem>
-        <MenuItem value={"js/js"}>JavaScript</MenuItem>
+        <MenuItem value={""}>Usuń</MenuItem>
+        <MenuItem value={"Go"}>Go</MenuItem>
+        <MenuItem value={"Java"}>Java</MenuItem>
+        <MenuItem value={"JavaScript"}>JavaScript</MenuItem>
       </Select>
     </FormControl>
   );
@@ -113,10 +114,11 @@ export default function FiltrPanel(props: {
       setRequiredValidation(!phrase ? "phrase" : "user");
     } else {
       setRequiredValidation("");
+
       const queryString =
         "code?q=" +
         encodeURIComponent(
-          `${phrase} in:file user:${user} language:${language}`
+          `${phrase} in:file,path user:${user} language:${language}`
         );
 
       api.get(queryString, { responseType: "json" }).then(
@@ -130,8 +132,18 @@ export default function FiltrPanel(props: {
     }
   };
 
+  const handleEnter = (
+    e: React.KeyboardEvent<HTMLInputElement>
+  ): void | null => {
+    if (e.key === "Enter") {
+      return handleSearch();
+    } else {
+      return null;
+    }
+  };
+
   return (
-    <div className="filtrPanel">
+    <div className="filtrPanel" onKeyDown={handleEnter}>
       <div className="inputs">
         <PhraseInput
           phrase={phrase}
