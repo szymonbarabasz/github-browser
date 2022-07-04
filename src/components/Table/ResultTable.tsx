@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ResponseDataTypes } from "../../PresentationComponent";
+import { ResponseDataTypes } from "../../App";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -13,23 +13,16 @@ import LinkIcon from "@mui/icons-material/Link";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AvatarModal from "./AvatarModal";
 
-interface TableDataPropsTypes {
-  responseData: ResponseDataTypes;
-  page: number;
-  rowsPerPage: number;
-}
-
 function TableData({
   responseData,
-  page,
-  rowsPerPage,
-}: TableDataPropsTypes): JSX.Element {
+}: {
+  responseData: ResponseDataTypes;
+}): JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
   const handleOpenModal = () => setIsOpen(!isOpen);
 
-  const responseDataArr = responseData.items
-    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-    .map(({ name, html_url, repository }, index) => {
+  const responseDataArr = responseData.items.map(
+    ({ name, html_url, repository }, index) => {
       return (
         <TableRow key={name + index}>
           <TableCell>
@@ -52,21 +45,32 @@ function TableData({
           </TableCell>
         </TableRow>
       );
-    });
+    }
+  );
 
   return <>{responseDataArr}</>;
 }
 
+interface ResultTablePropsTypes {
+  responseData: ResponseDataTypes;
+  page: number;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+  rowsPerPage: number;
+  setRowsPerPage: React.Dispatch<React.SetStateAction<number>>;
+  requestHandle: (page: number, rowsPerPage: number) => void;
+}
+
 export default function ResultTable({
   responseData,
-}: {
-  responseData: ResponseDataTypes;
-}): JSX.Element {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-
+  page,
+  setPage,
+  rowsPerPage,
+  setRowsPerPage,
+  requestHandle,
+}: ResultTablePropsTypes): JSX.Element {
   const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage);
+    requestHandle(newPage, rowsPerPage);
   };
 
   const handleChangeRowsPerPage = (
@@ -74,6 +78,7 @@ export default function ResultTable({
   ) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
+    requestHandle(page, +event.target.value);
   };
 
   return (
@@ -95,11 +100,7 @@ export default function ResultTable({
           </TableHead>
           <TableBody>
             {responseData.total_count ? (
-              <TableData
-                responseData={responseData}
-                page={page}
-                rowsPerPage={rowsPerPage}
-              />
+              <TableData responseData={responseData} />
             ) : (
               <TableRow></TableRow>
             )}

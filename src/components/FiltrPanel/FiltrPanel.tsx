@@ -4,27 +4,47 @@ import Alert from "@mui/material/Alert";
 import Collapse from "@mui/material/Collapse";
 import SearchIcon from "@mui/icons-material/Search";
 import Link from "@mui/material/Link";
-import api from "../../axiosConfig";
-import { ResponseDataTypes } from "../../PresentationComponent";
 import { PhraseInput, UserInput, LanguageInput } from "./InputComponents";
 
+interface FilterPanelPropsTypes {
+  error: {
+    message: string;
+    documentationLink: string;
+    isError: boolean;
+  };
+  setError: React.Dispatch<
+    React.SetStateAction<{
+      message: string;
+      documentationLink: string;
+      isError: boolean;
+    }>
+  >;
+  setPhrase: React.Dispatch<React.SetStateAction<string>>;
+  setUser: React.Dispatch<React.SetStateAction<string>>;
+  setLanguage: React.Dispatch<React.SetStateAction<string>>;
+  phrase: string;
+  user: string;
+  language: string;
+  requestHandle: (page: number, rowsPerPage: number) => void;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+  rowsPerPage: number;
+}
+
 export default function FiltrPanel({
-  setResponseData,
-}: {
-  setResponseData: React.Dispatch<React.SetStateAction<ResponseDataTypes>>;
-}): JSX.Element {
-  const [phrase, setPhrase] = useState(sessionStorage.getItem("phrase") ?? "");
-  const [user, setUser] = useState(sessionStorage.getItem("user") ?? "");
-  const [language, setLanguage] = useState(
-    sessionStorage.getItem("language") ?? ""
-  );
+  error,
+  setError,
+  setPhrase,
+  setUser,
+  setLanguage,
+  phrase,
+  user,
+  language,
+  requestHandle,
+  setPage,
+  rowsPerPage,
+}: FilterPanelPropsTypes): JSX.Element {
   const [searchButtonDisable, setSearchButtonDisable] = useState(true);
   const [requiredValidation, setRequiredValidation] = useState("");
-  const [error, setError] = useState({
-    message: "",
-    documentationLink: "",
-    isError: false,
-  });
 
   useEffect(() => {
     setSearchButtonDisable(
@@ -37,25 +57,8 @@ export default function FiltrPanel({
       setRequiredValidation(!phrase ? "phrase" : "user");
     } else {
       setRequiredValidation("");
-
-      const queryString =
-        "code?q=" +
-        encodeURIComponent(
-          `${phrase} in:file,path user:${user} language:${language}`
-        );
-
-      api.get(queryString, { responseType: "json" }).then(
-        (res) => {
-          setResponseData(res.data);
-        },
-        (error) => {
-          setError({
-            message: `${error.response.data.message}. `,
-            documentationLink: error.response.data.documentation_url,
-            isError: true,
-          });
-        }
-      );
+      setPage(0);
+      requestHandle(0, rowsPerPage);
     }
   };
 

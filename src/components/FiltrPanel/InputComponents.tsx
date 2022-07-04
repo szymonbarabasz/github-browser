@@ -84,7 +84,7 @@ export function LanguageInput({
       <InputLabel id="demo-simple-select-label">Język programowania</InputLabel>
       <Select
         labelId="demo-simple-select-label"
-        value={language ? language : ""}
+        value={language ?? ""}
         label="Język programowania"
         onChange={handleChange}
       >
