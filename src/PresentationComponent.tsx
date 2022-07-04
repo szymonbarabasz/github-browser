@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import FiltrPanel from "./components/FiltrPanel";
-import ResultTable from "./components/ResultTable";
+import FiltrPanel from "./components/FiltrPanel/FiltrPanel";
+import ResultTable from "./components/Table/ResultTable";
 
-export interface responseDataTypes {
+export interface ResponseDataTypes {
   incomplete_results: boolean;
   items: [
     {
@@ -18,7 +18,7 @@ export interface responseDataTypes {
 }
 
 function App(): JSX.Element {
-  const [responseData, setResponseData] = useState<responseDataTypes>({
+  const [responseData, setResponseData] = useState<ResponseDataTypes>({
     incomplete_results: false,
     items: [
       {

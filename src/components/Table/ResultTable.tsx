@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { responseDataTypes } from "../PresentationComponent";
+import { ResponseDataTypes } from "../../PresentationComponent";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -11,40 +11,43 @@ import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
 import LinkIcon from "@mui/icons-material/Link";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import ModalFunction from "./AvatarModal";
+import AvatarModal from "./AvatarModal";
 
-function TableData(props: {
-  responseData: responseDataTypes;
+interface TableDataPropsTypes {
+  responseData: ResponseDataTypes;
   page: number;
   rowsPerPage: number;
-}): JSX.Element {
-  const [openModal, setOpenModal] = useState(false);
-  const handleOpenModal = () => setOpenModal(true);
+}
 
-  const responseDataArr = props.responseData.items
-    .slice(
-      props.page * props.rowsPerPage,
-      props.page * props.rowsPerPage + props.rowsPerPage
-    )
-    .map((el) => {
+function TableData({
+  responseData,
+  page,
+  rowsPerPage,
+}: TableDataPropsTypes): JSX.Element {
+  const [isOpen, setIsOpen] = useState(false);
+  const handleOpenModal = () => setIsOpen(!isOpen);
+
+  const responseDataArr = responseData.items
+    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+    .map(({ name, html_url, repository }, index) => {
       return (
-        <TableRow key={el.name}>
+        <TableRow key={name + index}>
           <TableCell>
-            {el.name}{" "}
-            <IconButton href={el.html_url}>
+            {name}{" "}
+            <IconButton href={html_url}>
               <LinkIcon />
             </IconButton>
           </TableCell>
-          <TableCell align="center">{el.repository.description}</TableCell>
+          <TableCell align="center">{repository.description}</TableCell>
           <TableCell align="center">
-            {el.repository.owner.login}{" "}
+            {repository.owner.login}{" "}
             <IconButton onClick={handleOpenModal}>
               <AccountCircleIcon />
             </IconButton>
-            <ModalFunction
-              imgSrc={el.repository.owner.avatar_url}
-              openModal={openModal}
-              setOpenModal={setOpenModal}
+            <AvatarModal
+              imgSrc={repository.owner.avatar_url}
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
             />
           </TableCell>
         </TableRow>
@@ -54,8 +57,10 @@ function TableData(props: {
   return <>{responseDataArr}</>;
 }
 
-export default function ResultTable(props: {
-  responseData: responseDataTypes;
+export default function ResultTable({
+  responseData,
+}: {
+  responseData: ResponseDataTypes;
 }): JSX.Element {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -89,9 +94,9 @@ export default function ResultTable(props: {
             </TableRow>
           </TableHead>
           <TableBody>
-            {props.responseData.total_count ? (
+            {responseData.total_count ? (
               <TableData
-                responseData={props.responseData}
+                responseData={responseData}
                 page={page}
                 rowsPerPage={rowsPerPage}
               />
@@ -104,7 +109,7 @@ export default function ResultTable(props: {
       <TablePagination
         rowsPerPageOptions={[5, 10, 15]}
         component="div"
-        count={props.responseData.total_count}
+        count={responseData.total_count}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

@@ -3,17 +3,23 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Fade from "@mui/material/Fade";
 
-export default function ModalFunction(props: {
+interface AvatarModalPropsTypes {
   imgSrc: string;
-  openModal: boolean;
-  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
-}): JSX.Element {
-  const handleCloseModal = () => props.setOpenModal(false);
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export default function AvatarModal({
+  imgSrc,
+  isOpen,
+  setIsOpen,
+}: AvatarModalPropsTypes): JSX.Element {
+  const handleCloseModal = () => setIsOpen(!isOpen);
 
   return (
     <Modal
       className="modal"
-      open={props.openModal}
+      open={isOpen}
       onClose={handleCloseModal}
       BackdropProps={{
         style: { backgroundColor: "rgba(0, 0, 0, 0.2)" },
@@ -21,9 +27,9 @@ export default function ModalFunction(props: {
       }}
       closeAfterTransition
     >
-      <Fade in={props.openModal}>
+      <Fade in={isOpen}>
         <Box>
-          <img src={props.imgSrc} alt="avatar" />
+          <img src={imgSrc} alt="avatar" />
         </Box>
       </Fade>
     </Modal>
