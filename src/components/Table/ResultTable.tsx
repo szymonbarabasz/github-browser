@@ -12,6 +12,7 @@ import IconButton from "@mui/material/IconButton";
 import LinkIcon from "@mui/icons-material/Link";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AvatarModal from "./AvatarModal";
+import { useStatesContext } from "../StatesContext";
 
 function TableData({
   responseData,
@@ -53,21 +54,15 @@ function TableData({
 
 interface ResultTablePropsTypes {
   responseData: ResponseDataTypes;
-  page: number;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
-  rowsPerPage: number;
-  setRowsPerPage: React.Dispatch<React.SetStateAction<number>>;
   requestHandle: (page: number, rowsPerPage: number) => void;
 }
 
 export default function ResultTable({
   responseData,
-  page,
-  setPage,
-  rowsPerPage,
-  setRowsPerPage,
   requestHandle,
 }: ResultTablePropsTypes): JSX.Element {
+  const { page, setPage, rowsPerPage, setRowsPerPage } = useStatesContext();
+
   const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage);
     requestHandle(newPage, rowsPerPage);

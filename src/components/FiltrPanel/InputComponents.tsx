@@ -4,18 +4,19 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { useStatesContext } from "../StatesContext";
 
 interface PharseInputPropsTypes {
   phrase: string;
-  setPhrase: React.Dispatch<React.SetStateAction<string>>;
   requiredValidation: string;
 }
 
 export function PhraseInput({
   phrase,
-  setPhrase,
   requiredValidation,
 }: PharseInputPropsTypes): JSX.Element {
+  const { setPhrase } = useStatesContext();
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setPhrase(event.target.value.trimStart());
     sessionStorage.setItem("phrase", event.target.value.trimStart());
@@ -37,15 +38,15 @@ export function PhraseInput({
 
 interface UserInputPropsTypes {
   user: string;
-  setUser: React.Dispatch<React.SetStateAction<string>>;
   requiredValidation: string;
 }
 
 export function UserInput({
   user,
-  setUser,
   requiredValidation,
 }: UserInputPropsTypes): JSX.Element {
+  const { setUser } = useStatesContext();
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setUser(event.target.value.trimStart());
     sessionStorage.setItem("user", event.target.value.trimStart());
@@ -65,15 +66,9 @@ export function UserInput({
   );
 }
 
-interface LanguageInputPropsTypes {
-  language: string;
-  setLanguage: React.Dispatch<React.SetStateAction<string>>;
-}
+export function LanguageInput({ language }: { language: string }): JSX.Element {
+  const { setLanguage } = useStatesContext();
 
-export function LanguageInput({
-  language,
-  setLanguage,
-}: LanguageInputPropsTypes): JSX.Element {
   const handleChange = (event: SelectChangeEvent): void => {
     setLanguage(event.target.value);
     sessionStorage.setItem("language", event.target.value as string);

@@ -5,6 +5,7 @@ import Collapse from "@mui/material/Collapse";
 import SearchIcon from "@mui/icons-material/Search";
 import Link from "@mui/material/Link";
 import { PhraseInput, UserInput, LanguageInput } from "./InputComponents";
+import { useStatesContext } from "../StatesContext";
 
 interface FilterPanelPropsTypes {
   error: {
@@ -19,32 +20,17 @@ interface FilterPanelPropsTypes {
       isError: boolean;
     }>
   >;
-  setPhrase: React.Dispatch<React.SetStateAction<string>>;
-  setUser: React.Dispatch<React.SetStateAction<string>>;
-  setLanguage: React.Dispatch<React.SetStateAction<string>>;
-  phrase: string;
-  user: string;
-  language: string;
   requestHandle: (page: number, rowsPerPage: number) => void;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
-  rowsPerPage: number;
 }
 
 export default function FiltrPanel({
   error,
   setError,
-  setPhrase,
-  setUser,
-  setLanguage,
-  phrase,
-  user,
-  language,
   requestHandle,
-  setPage,
-  rowsPerPage,
 }: FilterPanelPropsTypes): JSX.Element {
   const [searchButtonDisable, setSearchButtonDisable] = useState(true);
   const [requiredValidation, setRequiredValidation] = useState("");
+  const { setPage, rowsPerPage, phrase, user, language } = useStatesContext();
 
   useEffect(() => {
     setSearchButtonDisable(
@@ -52,7 +38,8 @@ export default function FiltrPanel({
     );
   }, [phrase, user, language]);
 
-  const handleSearch = (): void => {
+  const handleSearch = (event: React.ChangeEvent<HTMLFormElement>): void => {
+    event.preventDefault();
     if (!phrase || !user) {
       setRequiredValidation(!phrase ? "phrase" : "user");
     } else {
@@ -62,37 +49,19 @@ export default function FiltrPanel({
     }
   };
 
-  const handleEnter = (
-    e: React.KeyboardEvent<HTMLInputElement>
-  ): void | null => {
-    if (e.key === "Enter") {
-      return handleSearch();
-    } else {
-      return null;
-    }
-  };
-
   return (
-    <div className="filtrPanel" onKeyDown={handleEnter}>
+    <form className="filtrPanel" onSubmit={handleSearch}>
       <div className="inputs">
-        <PhraseInput
-          phrase={phrase}
-          setPhrase={setPhrase}
-          requiredValidation={requiredValidation}
-        />
-        <UserInput
-          user={user}
-          setUser={setUser}
-          requiredValidation={requiredValidation}
-        />
-        <LanguageInput language={language} setLanguage={setLanguage} />
+        <PhraseInput phrase={phrase} requiredValidation={requiredValidation} />
+        <UserInput user={user} requiredValidation={requiredValidation} />
+        <LanguageInput language={language} />
       </div>
       <p className="description">*pola wymagane</p>
       <Button
+        type="submit"
         disabled={searchButtonDisable}
         variant="contained"
         endIcon={<SearchIcon />}
-        onClick={handleSearch}
       >
         Szukaj
       </Button>
@@ -110,6 +79,6 @@ export default function FiltrPanel({
           </Link>
         </Alert>
       </Collapse>
-    </div>
+    </form>
   );
 }

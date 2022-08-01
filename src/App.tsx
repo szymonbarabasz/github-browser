@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import FiltrPanel from "./components/FiltrPanel/FiltrPanel";
 import ResultTable from "./components/Table/ResultTable";
 import api from "./axiosConfig";
+import { useStatesContext } from "./components/StatesContext";
 
 export interface ResponseDataTypes {
   incomplete_results: boolean;
@@ -38,13 +39,7 @@ function App(): JSX.Element {
     documentationLink: "",
     isError: false,
   });
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [phrase, setPhrase] = useState(sessionStorage.getItem("phrase") ?? "");
-  const [user, setUser] = useState(sessionStorage.getItem("user") ?? "");
-  const [language, setLanguage] = useState(
-    sessionStorage.getItem("language") ?? ""
-  );
+  const { phrase, user, language } = useStatesContext();
 
   function requestHandle(page: number, rowsPerPage: number) {
     const queryString =
@@ -77,24 +72,9 @@ function App(): JSX.Element {
       <FiltrPanel
         error={error}
         setError={setError}
-        setPhrase={setPhrase}
-        setUser={setUser}
-        setLanguage={setLanguage}
-        phrase={phrase}
-        user={user}
-        language={language}
-        requestHandle={requestHandle}
-        setPage={setPage}
-        rowsPerPage={rowsPerPage}
-      />
-      <ResultTable
-        responseData={responseData}
-        page={page}
-        setPage={setPage}
-        rowsPerPage={rowsPerPage}
-        setRowsPerPage={setRowsPerPage}
         requestHandle={requestHandle}
       />
+      <ResultTable responseData={responseData} requestHandle={requestHandle} />
     </div>
   );
 }
