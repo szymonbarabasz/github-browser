@@ -1,3 +1,4 @@
-Krajowa Chmura recruitment task
+That's app is using GitHub API to search for files in GitHub repositories by entered phrase, user and selected programming language.
+It also displays received data in paginated table with info about name of file, user, link to file and user avatar.
 
-skrypt budujący/uruchomieniowy: npm start
+It's all made using React, TypeScript, MUI and SASS.
