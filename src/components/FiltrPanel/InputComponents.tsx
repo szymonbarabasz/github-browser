@@ -87,6 +87,8 @@ export function LanguageInput({ language }: { language: string }): JSX.Element {
         <MenuItem value={"Go"}>Go</MenuItem>
         <MenuItem value={"Java"}>Java</MenuItem>
         <MenuItem value={"JavaScript"}>JavaScript</MenuItem>
+        <MenuItem value={"TypeScript"}>TypeScript</MenuItem>
+        <MenuItem value={"TSX"}>TSX</MenuItem>
       </Select>
     </FormControl>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import FiltrPanel from "./components/FiltrPanel/FiltrPanel";
 import ResultTable from "./components/Table/ResultTable";
 import api from "./axiosConfig";
@@ -49,7 +49,11 @@ function App(): JSX.Element {
       );
 
     api
-      .get(queryString + `&per_page=${rowsPerPage}&page=${page + 1}`, {
+      .get(queryString, {
+        params: {
+          per_page: rowsPerPage,
+          page: page + 1,
+        },
         responseType: "json",
       })
       .then(
