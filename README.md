@@ -3,4 +3,4 @@ It also displays received data in paginated table with info about name of file, 
 
 It's all made using React, TypeScript, MUI and SASS.
 
-You can check it on Firebase demo: github-browser-46cad.web.app
+You can check it on Firebase demo: http://github-browser-46cad.web.app
