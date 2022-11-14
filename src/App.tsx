@@ -39,6 +39,7 @@ function App(): JSX.Element {
     documentationLink: "",
     isError: false,
   });
+  const [noResultsFlag, setNoResultsFlag] = useState(false);
   const { phrase, user, language } = useStatesContext();
 
   function requestHandle(page: number, rowsPerPage: number) {
@@ -58,7 +59,12 @@ function App(): JSX.Element {
       })
       .then(
         (res) => {
-          setResponseData(res.data);
+          if (res.data.total_count) {
+            setNoResultsFlag(false);
+            setResponseData(res.data);
+          } else {
+            setNoResultsFlag(true);
+          }
         },
         (error) => {
           setError({
@@ -77,6 +83,8 @@ function App(): JSX.Element {
         error={error}
         setError={setError}
         requestHandle={requestHandle}
+        noResultsFlag={noResultsFlag}
+        setNoResultsFlag={setNoResultsFlag}
       />
       <ResultTable responseData={responseData} requestHandle={requestHandle} />
     </div>

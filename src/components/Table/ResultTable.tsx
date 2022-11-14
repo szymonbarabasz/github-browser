@@ -97,7 +97,7 @@ export default function ResultTable({
             {responseData.total_count ? (
               <TableData responseData={responseData} />
             ) : (
-              <TableRow></TableRow>
+              <></>
             )}
           </TableBody>
         </Table>

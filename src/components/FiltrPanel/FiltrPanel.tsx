@@ -21,12 +21,16 @@ interface FilterPanelPropsTypes {
     }>
   >;
   requestHandle: (page: number, rowsPerPage: number) => void;
+  noResultsFlag: boolean;
+  setNoResultsFlag: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function FiltrPanel({
   error,
   setError,
   requestHandle,
+  noResultsFlag,
+  setNoResultsFlag,
 }: FilterPanelPropsTypes): JSX.Element {
   const [searchButtonDisable, setSearchButtonDisable] = useState(true);
   const [requiredValidation, setRequiredValidation] = useState("");
@@ -65,6 +69,18 @@ export default function FiltrPanel({
       >
         Szukaj
       </Button>
+      <Collapse in={noResultsFlag}>
+        <Alert
+          className="alert"
+          severity="warning"
+          onClose={() => {
+            setNoResultsFlag(false);
+          }}
+          style={{ width: "max-content" }}
+        >
+          No results found!
+        </Alert>
+      </Collapse>
       <Collapse in={!!error.isError}>
         <Alert
           className="alert"
