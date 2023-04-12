@@ -1,7 +1,7 @@
 import { useState } from "react";
 import FiltrPanel from "./components/FiltrPanel/FiltrPanel";
 import ResultTable from "./components/Table/ResultTable";
-import api from "./axiosConfig";
+import APIFetchService from "./services/APIFetchService";
 import { useStatesContext } from "./components/StatesContext";
 
 export interface ResponseDataTypes {
@@ -49,31 +49,23 @@ function App(): JSX.Element {
         `${phrase} in:file,path user:${user} language:${language}`
       );
 
-    api
-      .get(queryString, {
-        params: {
-          per_page: rowsPerPage,
-          page: page + 1,
-        },
-        responseType: "json",
-      })
-      .then(
-        (res) => {
-          if (res.data.total_count) {
-            setNoResultsFlag(false);
-            setResponseData(res.data);
-          } else {
-            setNoResultsFlag(true);
-          }
-        },
-        (error) => {
-          setError({
-            message: `${error.response.data.message}. `,
-            documentationLink: error.response.data.documentation_url,
-            isError: true,
-          });
+    APIFetchService(page, rowsPerPage, queryString).then(
+      (res) => {
+        if (res.data.total_count) {
+          setNoResultsFlag(false);
+          setResponseData(res.data);
+        } else {
+          setNoResultsFlag(true);
         }
-      );
+      },
+      (error) => {
+        setError({
+          message: `${error.response.data.message}. `,
+          documentationLink: error.response.data.documentation_url,
+          isError: true,
+        });
+      }
+    );
   }
 
   return (

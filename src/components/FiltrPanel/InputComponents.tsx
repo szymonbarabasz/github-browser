@@ -62,6 +62,7 @@ export function UserInput({
       required
       onChange={handleChange}
       variant="standard"
+      data-testid="user-input"
     />
   );
 }
