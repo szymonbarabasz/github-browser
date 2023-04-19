@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FiltrPanel from "./components/FiltrPanel/FiltrPanel";
 import ResultTable from "./components/Table/ResultTable";
 import APIFetchService from "./services/APIFetchService";
